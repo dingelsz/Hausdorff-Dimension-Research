@@ -1,0 +1,23 @@
+x <- c()#
+yFrontier <- c()#
+yArea <- c()#
+yDiameter <- c()#
+for (f in list.files('../Data/')) {#
+  csvData <- read.csv(paste0("../Data/", f))#
+  # Get the indexes of each _#
+  underscoreIndexes <- str_locate_all(f, "_")[[1]]#
+  # The number of steps is inside the 2nd and 3rd _. +1 and -1 to not include the _#
+  steps = as.integer(substr(f, underscoreIndexes[2] + 1, underscoreIndexes[3] - 1))#
+  names(csvData) <- c("x", "y", "isFrontier")#
+  csvData$isFrontier = as.logical(csvData$isFrontier)#
+  x <- c(x, steps)#
+  yFrontier <- c(yFrontier, sum(csvData$isFrontier))#
+  yArea <- c(yArea, length(csvData$x))#
+  width = max(csvData$x) - min(csvData$x)#
+  height = max(csvData$y) - min(csvData$y)#
+  yDiameter <- c(yDiameter, sqrt(width^2 + height^2))#
+}#
+#
+lm(log(yFrontier) ~ log(x))#
+lm(log(yArea) ~ log(x))#
+lm(log(yDiameter) ~ log(x))

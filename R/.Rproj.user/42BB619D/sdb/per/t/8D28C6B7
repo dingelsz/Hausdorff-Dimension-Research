@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "x <- c()\nyFrontier <- c()\nyArea <- c()\nyDiameter <- c()\nfor (f in list.files('../Data/')) {\n  csvData <- read.csv(paste0(\"../Data/\", f))\n  \n  # Get the indexes of each _\n  underscoreIndexes <- str_locate_all(f, \"_\")[[1]]\n  # The number of steps is inside the 2nd and 3rd _. +1 and -1 to not include the _\n  steps = as.integer(substr(f, underscoreIndexes[2] + 1, underscoreIndexes[3] - 1))\n  \n  \n  names(csvData) <- c(\"x\", \"y\", \"isFrontier\")\n  csvData$isFrontier = as.logical(csvData$isFrontier)\n  \n  x <- c(x, steps)\n  yFrontier <- c(yFrontier, sum(csvData$isFrontier))\n  yArea <- c(yArea, length(csvData$x))\n  \n  width = max(csvData$x) - min(csvData$x)\n  height = max(csvData$y) - min(csvData$y)\n  yDiameter <- c(yDiameter, sqrt(width^2 + height^2))\n}\n\nlm(log(yFrontier) ~ log(x))\nlm(log(yArea) ~ log(x))\nlm(log(yDiameter) ~ log(x))\n",
+    "created" : 1485286852558.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "910674527",
+    "id" : "8D28C6B7",
+    "lastKnownWriteTime" : 1485285514,
+    "last_content_update" : 1485285514,
+    "path" : "~/Dropbox/WXML/R/analysis.R",
+    "project_path" : "analysis.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

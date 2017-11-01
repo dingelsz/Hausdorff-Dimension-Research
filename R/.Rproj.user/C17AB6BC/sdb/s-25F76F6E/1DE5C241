@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# Random Walk\nlibrary(stringr)\nlibrary(MASS)\n\nN_STEPS <- 500000\nearthworm_data <- list()\nxRadius <- c()\nyPointsClose <- c()\nyAverage <- c()\nallData <- list()\n# This is every file with earthworm format for method 2\nfiles <- list.files('../Data/')[grep(\"data_for_5000_steps_1_radius_\\\\d+_M2.csv\", list.files('../Data/'))]\nfor (f in files) {\n  # Need to set header to FALSE so we can read the first line\n  csvData <- read.csv(paste0(\"../Data/\", f), header = TRUE)\n  radius <- str_split(f, \"_\")[[1]][7]\n  allData[[radius]] <- csvData\n  \n  \n  names(csvData) <- c(\"x\", \"y\", \"isFrontier\", \"close\")\n  csvData$isFrontier = as.logical(csvData$isFrontier)\n  \n  yFrontierPointsClose <- csvData$close[csvData$isFrontier]\n  \n  yPointsClose <- c(yPointsClose, yFrontierPointsClose)\n  yAverage <- c(yAverage, mean(yFrontierPointsClose))\n  xRadius <- c(xRadius, rep(as.integer(radius), length(yFrontierPointsClose)))\n  \n  earthworm_data[[radius]] <- csvData\n}\n\nlogX <- log(xRadius)\nlogY <- log(yPointsClose) # This creates -Inf values for log(0), we will replace with 0\nlogY <- replace(logY, logY == -Inf, 0)\nallModel <- lm(logY ~ logX)\nmeanModel <- lm(log(yAverage) ~ log(unique(xRadius)))\n\n#image\n# plot(csvData$y~csvData$x, pch='.')\n# points(csvData$y[csvData$isFrontier]~csvData$x[csvData$isFrontier], pch='.', col='red')\n\n# All points\n# plot(logY ~ logX, ylab = \"Surrounding Points\", xlab = \"Radius Size\", main = paste0('In Log Scale, ', allModel$coefficients[2]))\n# abline(allModel$coefficients[1], allModel$coefficients[2], col='red')\n\n# Averages for each radius \nplot(log(yAverage) ~ log(unique(xRadius)), ylab = \"Average Surrounding Points\", xlab = \"Radius Size\", main = paste0('In Log Scale, ', allModel$coefficients[2]))\nabline(meanModel$coefficients[1], meanModel$coefficients[2], col = 'red')\n",
+    "created" : 1488261769503.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2850662285",
+    "id" : "1DE5C241",
+    "lastKnownWriteTime" : 1488261865,
+    "last_content_update" : 1488261865,
+    "path" : "~/Dropbox/WXML/R/analysis_m2.R",
+    "project_path" : "analysis_m2.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(stringr)\n\nx <- c()\nyFrontier <- c()\nyArea <- c()\nyDiameter <- c()\nfor (f in list.files('../Data/')) {\n  csvData <- read.csv(paste0(\"../Data/\", f))\n  \n  # Get the indexes of each _\n  underscoreIndexes <- str_locate_all(f, \"_\")[[1]]\n  # The number of steps is inside the 2nd and 3rd _. +1 and -1 to not include the _\n  steps = as.integer(substr(f, underscoreIndexes[2] + 1, underscoreIndexes[3] - 1))\n  \n  \n  names(csvData) <- c(\"x\", \"y\", \"isFrontier\")\n  csvData$isFrontier = as.logical(csvData$isFrontier)\n  \n  x <- c(x, steps)\n  yFrontier <- c(yFrontier, sum(csvData$isFrontier))\n  yArea <- c(yArea, length(csvData$x))\n  \n  width = max(csvData$x) - min(csvData$x)\n  height = max(csvData$y) - min(csvData$y)\n  yDiameter <- c(yDiameter, sqrt(width^2 + height^2))\n}\n\nfFrontier <- lm(log(yFrontier) ~ log(x))\nfArea <- lm(log(yArea) ~ log(x))\nfDiameter <- lm(log(yDiameter) ~ log(x))\n\npar(mar=c(1,1,1,1))\npar(mfrow=c(3,1))\n\nplot(log(yFrontier) ~ log(sqrt(x)), main = 'Logarithmic Number of Frontier Points vs Logarithmic Number of Steps')\nabline(fFrontier$coefficients[1], fFrontier$coefficients[2], col='red')\n\nplot(log(yArea) ~ log(sqrt(x)), main = 'Logarithmic Area vs Logarithmic Number of Steps')\nabline(fArea$coefficients[1], fArea$coefficients[2], col='red')\n\nplot(log(yDiameter) ~ log(sqrt(x)), main = 'Logarithmic Diameter vs Logarithmic Number of Steps')\nabline(fDiameter$coefficients[1], fDiameter$coefficients[2], col='red')\n\nprint(paste0(\"Frontier Coefficient: \", fFrontier$coefficients[2]))\nprint(paste0(\"Area Coefficient: \", fArea$coefficients[2]))\nprint(paste0(\"Diameter Coefficient: \", fDiameter$coefficients[2]))\n",
+    "created" : 1486362525196.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3705139941",
+    "id" : "753CCF6B",
+    "lastKnownWriteTime" : 1486362535,
+    "last_content_update" : 1486362535774,
+    "path" : "~/Dropbox/WXML/R/analysis.R",
+    "project_path" : "analysis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
